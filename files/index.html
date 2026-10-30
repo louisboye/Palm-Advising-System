@@ -1,0 +1,369 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#123c35">
+    <meta
+      name="description"
+      content="Palm University College academic advising workspace for student progress, appointments, and follow-up."
+    >
+    <title>Academic Advising | Palm University College</title>
+    <link rel="stylesheet" href="css/style.css">
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to content</a>
+    <header class="top">
+      <div class="top-inner">
+        <a class="brand" href="#dashboard" aria-label="Palm Academic Advising home">
+          <img
+            class="logo"
+            src="assets/palm-university-college-logo.png"
+            alt="Palm University College"
+          >
+          <span class="brand-copy">
+            <strong>Academic Advising</strong>
+            <small>STUDENT SUCCESS WORKSPACE</small>
+          </span>
+        </a>
+        <div class="header-meta">
+          <span class="environment-tag"><span aria-hidden="true"></span>Demo workspace · synthetic data</span>
+          <button type="button" class="header-action" id="auth-toggle">Sign in</button>
+          <span class="account-chip" id="account-chip" hidden></span>
+          <button type="button" class="header-action" id="logout-button" hidden>Sign out</button>
+          <a class="institution-link" href="https://palm.edu.gh/" target="_blank" rel="noopener noreferrer">
+            Palm University College <span aria-hidden="true">↗</span>
+          </a>
+        </div>
+      </div>
+      <nav id="nav" aria-label="Main navigation">
+        <button type="button" data-view="dashboard" data-roles="adviser" data-icon="grid" class="active" aria-current="page">Overview</button>
+        <button type="button" data-view="progress" data-roles="student admin adviser" data-icon="chart">Student progress</button>
+        <button type="button" data-view="register" data-roles="admin" data-icon="userplus">People &amp; advising</button>
+        <button type="button" data-view="sessions" data-roles="student admin adviser" data-icon="calendar">Sessions</button>
+        <button type="button" data-view="reports" data-roles="admin adviser" data-icon="report">Reports</button>
+      </nav>
+    </header>
+
+    <div id="toast" role="status" aria-live="polite"></div>
+
+    <main id="main-content">
+      <section id="auth-view" class="view active" aria-labelledby="auth-title">
+        <div class="page-heading">
+          <div>
+            <p class="eyebrow">PALM ADVISING · ACCOUNT ACCESS</p>
+            <h1 id="auth-title">Welcome to Palm Advising</h1>
+            <p class="page-intro">Sign in to your Student, Adviser, or Administrator workspace, or register as a student.</p>
+          </div>
+        </div>
+        <div class="auth-card" id="auth-card">
+          <div class="auth-form-stage">
+            <form id="login-form" class="auth-form auth-login" aria-labelledby="login-title">
+              <div class="auth-form-heading">
+                <span class="auth-kicker">PALM UNIVERSITY COLLEGE</span>
+                <h2 id="login-title" tabindex="-1">Sign in</h2>
+                <p>Choose your account type and enter your credentials.</p>
+              </div>
+              <div class="login-role-section">
+                <span class="login-role-label" id="login-role-label">Choose your account</span>
+                <div class="login-role-options" role="group" aria-labelledby="login-role-label">
+                  <button type="button" class="login-role-option selected" data-login-role="STUDENT" aria-pressed="true">Student</button>
+                  <button type="button" class="login-role-option" data-login-role="ADVISER" aria-pressed="false">Adviser</button>
+                  <button type="button" class="login-role-option" data-login-role="ADMIN" aria-pressed="false">Administrator</button>
+                </div>
+                <p class="login-role-hint" id="login-role-hint" aria-live="polite">Sign in with your verified student account.</p>
+                <section class="local-admin-credentials" id="local-admin-credentials" aria-label="Local administrator credentials" hidden>
+                  <span class="auth-kicker">LOCAL MACHINE ONLY</span>
+                  <p class="local-admin-note">Development administrator credentials. Keep them private; the local backend must be running to sign in.</p>
+                  <dl>
+                    <dt>Email</dt>
+                    <dd id="local-admin-email"></dd>
+                    <dt>Password</dt>
+                    <dd id="local-admin-password"></dd>
+                  </dl>
+                  <p class="local-admin-status" id="local-admin-status" role="status"></p>
+                </section>
+              </div>
+              <label>Email <input name="email" type="email" required autocomplete="username"></label>
+              <label>Password <input name="password" type="password" required autocomplete="current-password"></label>
+              <button class="primary" type="submit">Continue to dashboard</button>
+              <p class="auth-helper">Adviser accounts are activated from an invitation. Administrator accounts are provisioned by Palm.</p>
+            </form>
+            <form id="student-registration-form" class="auth-form auth-register" aria-labelledby="student-signup-title" inert aria-hidden="true">
+              <div class="auth-form-heading">
+                <span class="auth-kicker">STUDENT ACCOUNT</span>
+                <h2 id="student-signup-title" tabindex="-1">Create your account</h2>
+                <p>Register with your official university details.</p>
+              </div>
+              <div class="auth-fields">
+                <label>Full name <input name="fullName" required maxlength="160" autocomplete="name"></label>
+                <label>Student number <input name="studentNumber" required maxlength="64" autocomplete="off"></label>
+                <label>Student email <input name="email" type="email" required maxlength="320" autocomplete="email"></label>
+                <label>Programme <input name="programme" required maxlength="160"></label>
+                <label>Level <input name="level" type="number" min="100" max="1000" step="100" required placeholder="e.g. 200"></label>
+                <label>Password <input name="password" type="password" required minlength="12" autocomplete="new-password" aria-describedby="student-password-hint"></label>
+              </div>
+              <small id="student-password-hint" class="form-hint">Use at least 12 characters. Passwords must not exceed 72 UTF-8 bytes.</small>
+              <button class="primary" type="submit">Create student account</button>
+              <p class="auth-helper">You’ll need to verify your email before signing in.</p>
+            </form>
+          </div>
+          <aside class="auth-promo" aria-live="polite">
+            <div class="auth-promo-copy auth-promo-register">
+              <span class="auth-kicker">YOUR ACADEMIC JOURNEY</span>
+              <h2>New to Palm Advising?</h2>
+              <p>Create a student account to keep your progress and advising support in one place.</p>
+              <button type="button" class="auth-switch" id="switch-to-register" aria-controls="student-registration-form">Create student account</button>
+            </div>
+            <div class="auth-promo-copy auth-promo-login">
+              <span class="auth-kicker">WELCOME BACK</span>
+              <h2>Already have an account?</h2>
+              <p>Sign in with your university email to pick up where you left off.</p>
+              <button type="button" class="auth-switch" id="switch-to-login" aria-controls="login-form">Back to sign in</button>
+            </div>
+          </aside>
+        </div>
+        <div class="auth-footer">
+          <p>Student registration requires email verification. Advisers sign in after accepting an invitation; administrators use provisioned accounts.</p>
+          <button type="button" class="text-button" id="demo-toggle">Explore the synthetic-data demo</button>
+        </div>
+      </section>
+
+      <section id="account-dashboard" class="view" aria-labelledby="account-title" hidden>
+        <div class="page-heading">
+          <div>
+            <p class="eyebrow" id="account-role-label">ACCOUNT DASHBOARD</p>
+            <h1 id="account-title">Welcome, <span id="account-name"></span></h1>
+            <p class="page-intro" id="account-intro"></p>
+          </div>
+          <span class="term-pill" id="account-role-pill"></span>
+        </div>
+        <div class="grid">
+          <section class="card c-teal" aria-labelledby="profile-title">
+            <h2 id="profile-title">Your account</h2>
+            <dl class="profile-details" id="profile-details"></dl>
+          </section>
+          <form id="invite-form" class="card c-violet" hidden>
+            <h2>Invite an adviser</h2>
+            <p class="form-hint">The adviser will receive a one-time link to set up their password.</p>
+            <label>Full name <input name="fullName" required maxlength="160" autocomplete="name"></label>
+            <label>Work email <input name="email" type="email" required maxlength="320" autocomplete="email"></label>
+            <label>Department <input name="department" required maxlength="160"></label>
+            <button class="primary" type="submit">Send adviser invitation</button>
+          </form>
+        </div>
+        <p class="account-notice" id="account-notice"></p>
+      </section>
+
+      <div id="demo-workspace" hidden>
+      <section class="workspace-switcher" aria-label="Choose a role workspace">
+        <div class="workspace-heading">
+          <div>
+            <p class="eyebrow">ROLE WORKSPACES</p>
+            <h2>Choose your workspace</h2>
+          </div>
+          <span class="demo-notice">Demo navigation only · sign-in and role permissions require a connected backend</span>
+        </div>
+        <div class="workspace-options">
+          <button type="button" class="workspace-option" data-role="student" aria-pressed="false">
+            <span class="workspace-icon student-icon" data-icon="cap" aria-hidden="true"></span>
+            <span><strong>Student</strong><small>My progress and sessions</small></span>
+            <span class="workspace-arrow" aria-hidden="true">→</span>
+          </button>
+          <button type="button" class="workspace-option" data-role="admin" aria-pressed="false">
+            <span class="workspace-icon admin-icon" data-icon="settings" aria-hidden="true"></span>
+            <span><strong>Administrator</strong><small>People, assignments, reports</small></span>
+            <span class="workspace-arrow" aria-hidden="true">→</span>
+          </button>
+          <button type="button" class="workspace-option selected" data-role="adviser" aria-pressed="true">
+            <span class="workspace-icon adviser-icon" data-icon="group" aria-hidden="true"></span>
+            <span><strong>Adviser</strong><small>Advisees and follow-ups</small></span>
+            <span class="workspace-arrow" aria-hidden="true">→</span>
+          </button>
+        </div>
+      </section>
+
+      <section id="dashboard" class="view active" aria-labelledby="dashboard-title">
+        <div class="page-heading">
+          <div>
+            <p class="eyebrow">ACADEMIC ADVISING</p>
+            <h1 id="dashboard-title">A clearer view of student progress</h1>
+            <p class="page-intro">Find an advisee, review the next steps, and keep every conversation moving forward.</p>
+          </div>
+          <span class="term-pill"><span class="term-dot" aria-hidden="true"></span>2026/27 academic year</span>
+        </div>
+
+        <div class="dashboard-layout">
+          <div class="dashboard-primary">
+            <form id="dash-form" class="search-panel">
+              <div class="search-copy">
+                <span class="search-icon" data-icon="search" aria-hidden="true"></span>
+                <div>
+                  <h2>Find an advising dashboard</h2>
+                  <p>Enter your advisor ID to load assigned students.</p>
+                </div>
+              </div>
+              <div class="search-controls">
+                <label class="sr-only" for="advisor-search">Advisor ID</label>
+                <input id="advisor-search" name="id" required autocomplete="off" placeholder="e.g. A001">
+                <button class="primary" type="submit">View advisees <span aria-hidden="true">→</span></button>
+              </div>
+            </form>
+            <div id="dash-out" aria-live="polite">
+              <div class="empty-state" data-icon="grid">
+                <p>Enter an advisor ID to see assigned students, with those needing attention first.</p>
+              </div>
+            </div>
+          </div>
+
+          <aside class="dashboard-aside" aria-label="University information">
+            <section class="info-card calendar-card" aria-labelledby="calendar-title">
+              <div class="info-card-heading">
+                <span class="info-icon" data-icon="calendar" aria-hidden="true"></span>
+                <div>
+                  <p class="eyebrow">UNDERGRADUATE</p>
+                  <h2 id="calendar-title">Semester one</h2>
+                </div>
+              </div>
+              <p class="calendar-year">September–December 2026</p>
+              <div class="calendar-event">
+                <span class="event-marker" aria-hidden="true"></span>
+                <div><strong>Lectures continue</strong><small>26 October – 11 December</small></div>
+              </div>
+              <div class="calendar-event">
+                <span class="event-marker exam" aria-hidden="true"></span>
+                <div><strong>End-of-semester exams</strong><small>14 – 22 December</small></div>
+              </div>
+              <a class="text-link" href="https://palm.edu.gh/academic-calendars/" target="_blank" rel="noopener noreferrer">
+                View Palm's academic calendar <span aria-hidden="true">↗</span>
+              </a>
+              <p class="source-note">Dates from the university's published 2026/27 undergraduate calendar.</p>
+            </section>
+
+            <section class="info-card values-card" aria-labelledby="values-title">
+              <p class="eyebrow">THE PALM COMMUNITY</p>
+              <h2 id="values-title">Guided by purpose</h2>
+              <p>Integrity, ethical leadership, and excellence are at the heart of Palm's approach to education.</p>
+              <a class="text-link" href="https://palm.edu.gh/about-us/" target="_blank" rel="noopener noreferrer">
+                About Palm <span aria-hidden="true">↗</span>
+              </a>
+            </section>
+          </aside>
+        </div>
+      </section>
+
+      <section id="progress" class="view" aria-labelledby="progress-title">
+        <div class="page-heading">
+          <div>
+            <p class="eyebrow">STUDENT SUCCESS</p>
+            <h1 id="progress-title">Student progress</h1>
+            <p class="page-intro">Bring academic results, credits, and follow-up actions into one view.</p>
+          </div>
+        </div>
+        <form id="prog-form" class="search-panel compact-search">
+          <div class="search-copy">
+            <span class="search-icon" data-icon="chart" aria-hidden="true"></span>
+            <div><h2>Look up a student</h2><p>Use a student ID to open their progress summary.</p></div>
+          </div>
+          <div class="search-controls">
+            <label class="sr-only" for="prog-id">Student ID</label>
+            <input name="id" id="prog-id" required autocomplete="off" placeholder="e.g. S001">
+            <button class="primary" type="submit">View progress <span aria-hidden="true">→</span></button>
+          </div>
+        </form>
+        <div id="prog-out" aria-live="polite">
+          <div class="empty-state" data-icon="chart"><p>Enter a student ID to view grades, credits, and action items.</p></div>
+        </div>
+      </section>
+
+      <section id="register" class="view" aria-labelledby="register-title">
+        <div class="page-heading">
+          <div>
+            <p class="eyebrow">PEOPLE &amp; ADVISING</p>
+            <h1 id="register-title">Student and advisor records</h1>
+            <p class="page-intro">Create demo records and connect students with an advisor.</p>
+          </div>
+          <span class="environment-tag"><span aria-hidden="true"></span>Demo data only</span>
+        </div>
+        <div class="grid">
+          <form id="student-form" class="card c-blue" data-roles="admin">
+            <h2 data-icon="cap">Create student profile</h2>
+            <label>Student ID <input name="id" required autocomplete="off"></label>
+            <label>Full name <input name="name" required autocomplete="name"></label>
+            <label>Email <input name="email" type="email" required autocomplete="email"></label>
+            <label>Programme <input name="programme" required></label>
+            <label>Level <input name="level" type="number" min="100" step="100" required placeholder="e.g. 200"></label>
+            <button class="primary" type="submit">Create profile</button>
+          </form>
+          <form id="advisor-form" class="card c-teal" data-roles="admin">
+            <h2 data-icon="user">Create advisor profile</h2>
+            <label>Advisor ID <input name="id" required autocomplete="off"></label>
+            <label>Full name <input name="name" required autocomplete="name"></label>
+            <label>Email <input name="email" type="email" required autocomplete="email"></label>
+            <label>Department <input name="department" required></label>
+            <button class="primary" type="submit">Create profile</button>
+          </form>
+          <form id="assign-form" class="card c-violet" data-roles="admin">
+            <h2 data-icon="link">Assign an advisor</h2>
+            <label>Student ID <input name="studentId" required autocomplete="off"></label>
+            <label>Advisor ID <input name="advisorId" required autocomplete="off"></label>
+            <button class="primary" type="submit">Assign student</button>
+            <p class="form-hint">Advisor capacity is limited to 15 advisees.</p>
+          </form>
+        </div>
+      </section>
+
+      <section id="sessions" class="view" aria-labelledby="sessions-title">
+        <div class="page-heading">
+          <div>
+            <p class="eyebrow">ADVISING MEETINGS</p>
+            <h1 id="sessions-title">Sessions</h1>
+            <p class="page-intro">Schedule an advising conversation and keep its status up to date.</p>
+          </div>
+        </div>
+        <div class="grid">
+          <form id="book-form" class="card c-amber" data-roles="student admin adviser">
+            <h2 data-icon="calendar">Book a session</h2>
+            <label>Student ID <input name="studentId" required autocomplete="off"></label>
+            <label>Advisor ID <input name="advisorId" required autocomplete="off"></label>
+            <label>Date and time <input name="dateTime" type="datetime-local" required></label>
+            <button class="primary" type="submit">Book session</button>
+          </form>
+          <form id="status-form" class="card c-coral" data-roles="admin adviser">
+            <h2 data-icon="check">Update session status</h2>
+            <label>Session ID <input name="id" required autocomplete="off"></label>
+            <label>Status
+              <select name="status">
+                <option value="IN_PROGRESS">In progress</option>
+                <option value="COMPLETED">Completed</option>
+                <option value="CANCELLED">Cancelled</option>
+                <option value="NO_SHOW">No-show</option>
+              </select>
+            </label>
+            <button class="primary" type="submit">Save status</button>
+          </form>
+        </div>
+      </section>
+
+      <section id="reports" class="view" aria-labelledby="reports-title">
+        <div class="page-heading">
+          <div>
+            <p class="eyebrow">ADVISOR INSIGHTS</p>
+            <h1 id="reports-title">Reports</h1>
+            <p class="page-intro">Review advisor workloads and students who may need follow-up.</p>
+          </div>
+        </div>
+        <div id="report-out" aria-live="polite"></div>
+      </section>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <span id="footer-status">Palm Academic Advising <span aria-hidden="true">·</span> Secure account access</span>
+      <a href="https://palm.edu.gh/" target="_blank" rel="noopener noreferrer">Palm University College <span aria-hidden="true">↗</span></a>
+    </footer>
+
+    <script src="js/api.js"></script>
+    <script src="js/app.js"></script>
+  </body>
+</html>

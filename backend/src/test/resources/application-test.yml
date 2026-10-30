@@ -1,0 +1,20 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:palm-advising-test;MODE=PostgreSQL;DB_CLOSE_DELAY=-1
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+  jpa:
+    hibernate:
+      ddl-auto: validate
+  flyway:
+    enabled: true
+app:
+  jwt:
+    secret: MDEyMzQ1Njc4OWFiY2RlZjAxMjM0NTY3ODlhYmNkZWY=
+  bootstrap:
+    admin:
+      enabled: true
+      email: admin@example.test
+      password: test-admin-password-just-for-tests
+      full-name: Test Administrator

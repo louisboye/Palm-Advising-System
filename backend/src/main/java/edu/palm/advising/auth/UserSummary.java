@@ -1,0 +1,9 @@
+package edu.palm.advising.auth;
+
+import java.util.UUID;
+
+public record UserSummary(UUID id, String email, String fullName, Role role) {
+    public static UserSummary from(AppUser user) {
+        return new UserSummary(user.getId(), user.getEmail(), user.getFullName(), user.getRole());
+    }
+}

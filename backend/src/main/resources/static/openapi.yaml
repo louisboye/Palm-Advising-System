@@ -1,0 +1,181 @@
+openapi: 3.1.0
+info:
+  title: Palm Advising API
+  version: 0.1.0
+  description: >
+    Authentication and role-scoped account endpoints for the Palm Advising System.
+    Student registration requires email verification. Adviser accounts are invitation-only.
+servers:
+  - url: http://localhost:8080
+security:
+  - bearerAuth: []
+paths:
+  /api/health:
+    get:
+      security: []
+      summary: Check API health
+      responses:
+        "200":
+          description: API is running
+  /api/auth/register/student:
+    post:
+      security: []
+      summary: Register a student and send an email verification link
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/StudentRegistration"
+      responses:
+        "202":
+          description: Registration accepted
+        "400":
+          description: Invalid request
+        "409":
+          description: Student number already registered
+  /api/auth/verify-email:
+    get:
+      security: []
+      summary: Verify a student email with a one-time token
+      parameters:
+        - in: query
+          name: token
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Email verified
+        "400":
+          description: Invalid, expired, or used token
+  /api/auth/accept-invitation:
+    post:
+      security: []
+      summary: Accept an adviser invitation and set a password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [token, password]
+              properties:
+                token:
+                  type: string
+                password:
+                  type: string
+                  minLength: 12
+                  maxLength: 72
+      responses:
+        "200":
+          description: Adviser account activated
+        "400":
+          description: Invalid, expired, or used token
+  /api/auth/login:
+    post:
+      security: []
+      summary: Sign in with email and password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+      responses:
+        "200":
+          description: Bearer access token and account summary
+        "401":
+          description: Invalid credentials or account not activated
+  /api/auth/me:
+    get:
+      summary: Get the authenticated account
+      responses:
+        "200":
+          description: Account summary
+  /api/students/me:
+    get:
+      summary: Get the authenticated student's profile (STUDENT role)
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Student profile
+        "403":
+          description: Student role required
+  /api/advisers/me:
+    get:
+      summary: Get the authenticated adviser's profile (ADVISER role)
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Adviser profile
+        "403":
+          description: Adviser role required
+  /api/admin/advisers:
+    post:
+      summary: Create an adviser account and send an invitation (ADMIN role)
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, fullName, department]
+              properties:
+                email:
+                  type: string
+                  format: email
+                fullName:
+                  type: string
+                  maxLength: 160
+                department:
+                  type: string
+                  maxLength: 160
+      responses:
+        "202":
+          description: Adviser invitation sent
+        "403":
+          description: Administrator role required
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    StudentRegistration:
+      type: object
+      required: [email, fullName, password, studentNumber, programme, level]
+      properties:
+        email:
+          type: string
+          format: email
+          maxLength: 320
+        fullName:
+          type: string
+          maxLength: 160
+        password:
+          type: string
+          minLength: 12
+          maxLength: 72
+        studentNumber:
+          type: string
+          maxLength: 64
+        programme:
+          type: string
+          maxLength: 160
+        level:
+          type: integer
+          minimum: 100
+          maximum: 1000

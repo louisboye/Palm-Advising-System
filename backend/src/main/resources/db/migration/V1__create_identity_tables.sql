@@ -1,0 +1,37 @@
+CREATE TABLE app_users (
+    id UUID PRIMARY KEY,
+    email VARCHAR(320) NOT NULL UNIQUE,
+    password_hash VARCHAR(100),
+    full_name VARCHAR(160) NOT NULL,
+    role VARCHAR(16) NOT NULL CHECK (role IN ('STUDENT', 'ADVISER', 'ADMIN')),
+    account_status VARCHAR(32) NOT NULL CHECK (account_status IN ('PENDING_EMAIL_VERIFICATION', 'INVITED', 'ACTIVE', 'DISABLED')),
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE student_profiles (
+    id UUID PRIMARY KEY,
+    user_id UUID NOT NULL UNIQUE REFERENCES app_users(id),
+    student_number VARCHAR(64) NOT NULL UNIQUE,
+    programme VARCHAR(160) NOT NULL,
+    level INTEGER NOT NULL CHECK (level > 0),
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE adviser_profiles (
+    id UUID PRIMARY KEY,
+    user_id UUID NOT NULL UNIQUE REFERENCES app_users(id),
+    department VARCHAR(160) NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE account_tokens (
+    id UUID PRIMARY KEY,
+    user_id UUID NOT NULL REFERENCES app_users(id),
+    token_hash VARCHAR(64) NOT NULL UNIQUE,
+    purpose VARCHAR(32) NOT NULL CHECK (purpose IN ('EMAIL_VERIFICATION', 'ADVISER_INVITATION')),
+    expires_at TIMESTAMP WITH TIME ZONE NOT NULL,
+    used_at TIMESTAMP WITH TIME ZONE,
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX account_tokens_user_purpose_idx ON account_tokens(user_id, purpose);

@@ -1,0 +1,21 @@
+services:
+  postgres:
+    image: postgres:17-alpine
+    container_name: palm-advising-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: palm_advising
+      POSTGRES_USER: palm
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?Set DB_PASSWORD in backend/.env}
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    volumes:
+      - palm-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U palm -d palm_advising"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  palm-postgres-data:
